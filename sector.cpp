@@ -3,11 +3,13 @@
 #include "gameData.h"
 #include "gameEngine.h"
 
+float Sector::x_shift= 0.0f;
+
 Sector::Sector(int id_x, int id_y): id_x(id_x), id_y(id_y) {
     float dimension_size= GameData::getInstance()->getSectorDimensionSize();
-    cout << "> Sector dim: " << GameData::getInstance()->getSectorDimensionSize() << endl;
 
-    my_rectangle= {dimension_size * (float)id_x, dimension_size * (float)id_y,
+    my_rectangle= {x_shift + dimension_size * (float)id_x,
+                   GameData::getInstance()->getSectorYShift() + dimension_size * (float)id_y,
                    dimension_size, dimension_size};
 
     my_texture= GameData::getInstance()->getTexture(GameData::Skin::INACTIVE);

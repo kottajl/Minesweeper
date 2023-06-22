@@ -5,6 +5,7 @@
 #include <raylib-cpp.hpp>
 #include <vector>
 #include <chrono>
+#include <random>
 #include <set>
 #include "sector.h"
 

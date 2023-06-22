@@ -3,6 +3,7 @@
 #include <raylib-cpp.hpp>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include <random>
 #include <unistd.h>
 #include <cstdlib>
@@ -17,6 +18,8 @@ Vector2 GameEngine::mouse_position= {0.0f, 0.0f};
 
 GameEngine::GameEngine(int no_sectors_x, int no_sectors_y, int no_mines) :
         no_sectors_x(no_sectors_x), no_sectors_y(no_sectors_y), no_mines(no_mines) {
+
+    Sector::setXShift( ((float)GetScreenWidth() - (float)no_sectors_x * GameData::getInstance()->getSectorDimensionSize()) / 2.0f );
 
     for (int i=0; i < no_sectors_y; i++) {
         vector <Sector> sector_line;
@@ -37,12 +40,21 @@ GameEngine::GameEngine(int no_sectors_x, int no_sectors_y, int no_mines) :
 
 GameData::GameStatus GameEngine::makeGame() {
     bool is_first_move= true;
+    string victory_msg= *GameData::getInstance()->getRandomVictoryMsg();
+    string defeat_msg= *GameData::getInstance()->getRandomDefeatMsg();
+    const int msg_size= 30;
 
     RectButton restart_button(500, 720, 200, 50, BLUE);
     restart_button.addText("RESTART", RAYWHITE);
 
-    RectButton menu_button(100, 720, 240, 50, RED);
-    menu_button.addText("MAIN MENU", GRAY);
+    Color orange_col({255, 128, 0});
+    RectButton menu_button(100, 720, 240, 50, (Color){ 240, 113, 0, 255 });
+    menu_button.addText("MAIN MENU", RAYWHITE);
+
+    RectButton minefield_border((int)Sector::getXShift(), (int)GameData::getInstance()->getSectorYShift(),
+                                 (int)((float)no_sectors_x * GameData::getInstance()->getSectorDimensionSize()),
+                                 (int)((float)no_sectors_y * GameData::getInstance()->getSectorDimensionSize()), BLACK);
+    minefield_border.disableHover();
 
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -51,16 +63,22 @@ GameData::GameStatus GameEngine::makeGame() {
         GameEngine::updateMousePosition();
 
         /// Draw elements
+        minefield_border.draw();
         drawMinefield();
         restart_button.draw();
         menu_button.draw();
 
         /// Game mechanics
         if (game_lost) {
-            DrawText("PRZEGRANA", 200, 600, 15, RED);
+            DrawText(defeat_msg.c_str(),
+                     (int)(((float)GetScreenWidth() - (float)msg_size * (float)defeat_msg.size() * 0.65f) / 2.0f),
+                     (int)GameData::getInstance()->getSectorYShift() + (int)((float)no_sectors_y * GameData::getInstance()->getSectorDimensionSize()) + 30,
+                     msg_size, MAROON);
         }
         else if (uncovered_sectors == 0) {
-            DrawText("WYGRANA", 200, 600, 15, GREEN);
+            DrawText(victory_msg.c_str(),
+                     (int)(((float)GetScreenWidth() - (float)msg_size * (float)victory_msg.size() * 0.65f) / 2.0f),
+                     550, msg_size, GREEN);
         }
         else {
             checkMouseAction(is_first_move);
@@ -69,13 +87,18 @@ GameData::GameStatus GameEngine::makeGame() {
         }
 
         /// Draw remained flags
-        DrawText(to_string(remained_flags).c_str(), 600, 700, 40, BLACK);
+        DrawText("Remained bombs: ", 370, 635, 40, BLACK);
+        DrawText((to_string(remained_flags)).c_str(), 720, 635, 40, BLACK);
 
         /// Draw timer
         string timer;
         long time_ms= std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count();
-        timer+= to_string( time_ms / 1000 ) + '.' + to_string(time_ms % 1000);
-        DrawText(timer.c_str(), 100, 700, 40, BLACK);
+        if (time_ms / 1000 >= 1000)
+            timer= "999.999";
+        else
+            timer= to_string( time_ms / 1000 ) + '.' + to_string(time_ms % 1000);
+        DrawText("Time: ", 50, 635, 40, BLACK);
+        DrawText(timer.c_str(), 170, 635, 40, BLACK);
 
         /// Check buttons
         if (restart_button.isClicked()) {

@@ -4,7 +4,6 @@
 #include <string>
 using namespace std;
 
-//float GameData::sector_dimension_size= 5.0f;
 GameData* GameData::gameData= nullptr;
 
 GameData* GameData::getInstance () {
@@ -35,12 +34,16 @@ GameData::GameData () {
     textures.push_back(LoadTexture("../resources/mine_red.png") );
 
     sector_dimension_size= 30.0f;
+    sector_y_shift= 0.0f;
 
     is_sound_on= true;
     sounds.push_back( LoadSound("../resources/sounds/click_sound.wav") );
     sounds.push_back( LoadSound("../resources/sounds/flag_sound.wav") );
     sounds.push_back( LoadSound("../resources/sounds/unflag_sound.wav") );
     sounds.push_back( LoadSound("../resources/sounds/bomb_sound.wav") );
+
+    victory_msgs= {"GG", "GREAT JOB", "NICE ONE"};
+    defeat_msgs= {"UNLUCKY", "NOT THIS TIME", "ALMOST"};
 }
 
 const Texture2D* GameData::getTexture (const int it) const {
@@ -129,11 +132,29 @@ const Sound *GameData::getSound (Tone tone) const {
     return getSound(it);
 }
 
-void GameData::playSound(int it) const {
-    PlaySound( *getSound(it) );
+void GameData::playSound (int it) const {
+    if (GameData::getInstance()->isSoundOn())
+        PlaySound( *getSound(it) );
 };
 
-void GameData::playSound(Tone tone) const {
-    PlaySound( *getSound(tone) );
+void GameData::playSound (Tone tone) const {
+    if (GameData::getInstance()->isSoundOn())
+        PlaySound( *getSound(tone) );
+}
+
+string* GameData::getRandomVictoryMsg() {
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> rdGen(0, (int)victory_msgs.size() - 1);
+
+    return &(victory_msgs[rdGen(gen)]);
+}
+
+string* GameData::getRandomDefeatMsg() {
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> rdGen(0, (int)defeat_msgs.size() - 1);
+
+    return &(defeat_msgs[rdGen(gen)]);
 }
 

@@ -28,6 +28,9 @@ public:
     [[nodiscard]] int getIdX () const { return id_x; }
     [[nodiscard]] int getIdY () const { return id_y; }
 
+    static void setXShift (float value) { x_shift= value; }
+    static float getXShift () { return x_shift; }
+
     bool operator== (const Sector& other) const;
 
 private:
@@ -38,6 +41,7 @@ private:
     Status my_status;
 
     static map <string, Texture2D> textures;
+    static float x_shift;
     // constexpr static const float dimension_size= 50.0f;
 
 };

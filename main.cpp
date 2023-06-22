@@ -1,9 +1,10 @@
 #include <iostream>
-//#include <raylib.h>
+#include <raylib.h>
 #include <raylib-cpp.hpp>
 #include "sector.h"
 #include "gameEngine.h"
 #include "rectButton.h"
+#include "switchButton.h"
 #include <unistd.h>
 
 using namespace std;
@@ -14,20 +15,27 @@ int main() {
     const int screenHeight = 800;
 
     InitWindow(screenWidth, screenHeight, "Kotla's Minesweeper");
+    SetWindowIcon( LoadImage("../resources/flag.png") );
     InitAudioDevice();
 
     std::cout << GetWorkingDirectory() << std::endl;
     SetTargetFPS(60);
 
-    RectButton button1= {310, 400, 180, 50, BLACK};
+    RectButton button1= {310, 375, 180, 50, BLACK};
     button1.addText("EASY", RAYWHITE);
 
-    RectButton button2= {310, 500, 180, 50, BLACK};
+    RectButton button2= {310, 475, 180, 50, BLACK};
     button2.addText("MEDIUM", RAYWHITE);
 
-    RectButton button3= {310, 600, 180, 50, BLACK};
+    RectButton button3= {310, 575, 180, 50, BLACK};
     button3.addText("HARD", RAYWHITE);
 
+    RectButton exit_button= {670, 720, 85, 38, RED};
+    exit_button.addText(" EXIT", RAYWHITE);
+
+    SwitchButton sound_button= {50, 720, 160, 38, MAROON, GREEN};
+    sound_button.addText("SOUND FX", RAYWHITE);
+    sound_button.swapColors();
 
     while (true) {
         GameData::GameStatus game_status= GameData::MAINMENU;
@@ -35,11 +43,16 @@ int main() {
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
+        DrawText("MINESWEEPER", 100, 110, 80, BLACK);
+        DrawText("by Kotla", 500, 200, 30, BLACK);
+        DrawText("version 1.2", 350, 730, 20, DARKGRAY);
+
         button1.draw();
         if (button1.isClicked()) {
             EndDrawing();
             game_status= GameData::GameStatus::RESTART;
             GameData::getInstance()->setSectorDimensionSize(50.0f);
+            GameData::getInstance()->setSectorYShift(60.0f);
 
             while (game_status == GameData::GameStatus::RESTART) {
                 GameEngine gameEngine(9, 9, 10);
@@ -51,7 +64,8 @@ int main() {
         if (button2.isClicked()) {
             EndDrawing();
             game_status= GameData::GameStatus::RESTART;
-            GameData::getInstance()->setSectorDimensionSize(35.0f);
+            GameData::getInstance()->setSectorDimensionSize(32.0f);
+            GameData::getInstance()->setSectorYShift(30.0f);
 
             while (game_status == GameData::GameStatus::RESTART) {
                 GameEngine gameEngine(16, 16, 40);
@@ -64,11 +78,22 @@ int main() {
             EndDrawing();
             game_status= GameData::GameStatus::RESTART;
             GameData::getInstance()->setSectorDimensionSize(25.0f);
+            GameData::getInstance()->setSectorYShift(50.0f);
 
             while (game_status == GameData::GameStatus::RESTART) {
                 GameEngine gameEngine(30, 16, 99);
                 game_status = gameEngine.makeGame();
             }
+        }
+
+        exit_button.draw();
+        if (exit_button.isClicked())
+            return 0;
+
+        sound_button.draw();
+        if (sound_button.isClicked()) {
+            sound_button.swapColors();
+            GameData::getInstance()->changeSoundness();
         }
 
         EndDrawing();

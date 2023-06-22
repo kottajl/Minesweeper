@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <raylib.h>
+#include <random>
 using namespace std;
 
 class GameData {
@@ -31,21 +32,33 @@ public:
     void playSound (int) const;
     void playSound (Tone) const;
 
-    // [[nodiscard]] int getNumOfMines () const { return num_of_mines; }
     [[nodiscard]] float getSectorDimensionSize () const { return sector_dimension_size; }
     void setSectorDimensionSize (float value) { sector_dimension_size= value; }
+
+    [[nodiscard]] float getSectorYShift () const { return sector_y_shift; }
+    void setSectorYShift (float value) { sector_y_shift= value; }
+
+    [[nodiscard]] bool isSoundOn () const { return is_sound_on; }
+    void changeSoundness () { is_sound_on= !is_sound_on; }
+
+    string* getRandomVictoryMsg ();
+    string* getRandomDefeatMsg ();
 
 
 private:
     GameData();
 
-    // int num_of_mines;
     static GameData* gameData;
     float sector_dimension_size;
+    float sector_y_shift;
+
     vector <Texture2D> textures;
 
     bool is_sound_on;
     vector <Sound> sounds;
+
+    vector <string> victory_msgs;
+    vector <string> defeat_msgs;
 };
 
 
