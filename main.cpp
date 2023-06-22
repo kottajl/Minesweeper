@@ -37,15 +37,40 @@ int main() {
     sound_button.addText("SOUND FX", RAYWHITE);
     sound_button.swapColors();
 
+//    random_device rd;
+//    mt19937 gen(rd());
+//    uniform_int_distribution<> rdGenX(0, 800);
+//    uniform_int_distribution<> rdGenSkin(1, 8);
+//
+//    GameData::getInstance()->setSectorDimensionSize(25.0f);
+//    GameData::getInstance()->setSectorYShift(0.0f);
+//    Sector sector1(0, 0);
+//    sector1.setLeftCorner(rdGenX(gen), -25);
+//    int counter= 0;
+//    const int speed= 5;
+
     while (true) {
         GameData::GameStatus game_status= GameData::MAINMENU;
+        GameData::getInstance()->setSectorDimensionSize(25.0f);
+        GameData::getInstance()->setSectorYShift(0.0f);
+
+//        counter= (counter + 1) % 60;
+//        if (counter == 0) {
+//
+//        }
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
+        /// Test matrix
+//        sector1.lowerRectangle(speed);
+//        if (counter % 5 == 0)
+//            sector1.changeSkin( rdGenSkin(gen) );
+//        sector1.draw();
+
         DrawText("MINESWEEPER", 100, 110, 80, BLACK);
         DrawText("by Kotla", 500, 200, 30, BLACK);
-        DrawText("version 1.2", 350, 730, 20, DARKGRAY);
+        DrawText("version 1.3", 350, 730, 20, DARKGRAY);
 
         button1.draw();
         if (button1.isClicked()) {

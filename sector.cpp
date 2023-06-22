@@ -41,7 +41,10 @@ bool Sector::operator== (const Sector &other) const {
     return this->id_x == other.id_x && this->id_y == other.id_y;
 }
 
-
+void Sector::setLeftCorner(int x, int y) {
+    my_rectangle.x= x_shift + (float)x;
+    my_rectangle.y= GameData::getInstance()->getSectorYShift() + (float)y;
+}
 
 
 #include "sector.h"

@@ -56,7 +56,10 @@ GameData::GameStatus GameEngine::makeGame() {
                                  (int)((float)no_sectors_y * GameData::getInstance()->getSectorDimensionSize()), BLACK);
     minefield_border.disableHover();
 
+    int counter= 0;
+
     while (!WindowShouldClose()) {
+        counter= (counter + 1) % 60;
         BeginDrawing();
 
         ClearBackground(RAYWHITE);
@@ -88,7 +91,10 @@ GameData::GameStatus GameEngine::makeGame() {
 
         /// Draw remained flags
         DrawText("Remained bombs: ", 370, 635, 40, BLACK);
-        DrawText((to_string(remained_flags)).c_str(), 720, 635, 40, BLACK);
+        Color remained_flags_text_color= BLACK;
+        if (remained_flags < 0)
+            remained_flags_text_color= MAROON;
+        DrawText((to_string(remained_flags)).c_str(), 720, 635, 40, remained_flags_text_color);
 
         /// Draw timer
         string timer;
@@ -98,7 +104,8 @@ GameData::GameStatus GameEngine::makeGame() {
         else
             timer= to_string( time_ms / 1000 ) + '.' + to_string(time_ms % 1000);
         DrawText("Time: ", 50, 635, 40, BLACK);
-        DrawText(timer.c_str(), 170, 635, 40, BLACK);
+        if (uncovered_sectors > 0 || (counter % 30) < 20)
+            DrawText(timer.c_str(), 170, 635, 40, BLACK);
 
         /// Check buttons
         if (restart_button.isClicked()) {
@@ -205,7 +212,7 @@ void GameEngine::uncoverSector (Sector* my_sector, bool& is_first_move) {
         for (int i=0; i < no_mines; i++) {
             SectorInfo temp((int)rdGenX(gen), (int)rdGenY(gen));
 
-            if (bombed_sectors.contains(temp) || /*temp == *my_sector || */
+            if (bombed_sectors.contains(temp) ||
                 abs(temp.id_x - my_sector->getIdX()) <= 1 || abs(temp.id_y - my_sector->getIdY()) <= 1) {
                 i--;
                 continue;
@@ -338,6 +345,12 @@ void GameEngine::checkMouseAction(bool& is_first_move) {
 
         }
     }
+
+//    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) || IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+//        Sector* my_sector= findHoveredSector(sectors);
+//
+//        if (my_sector->getStatus() == Sector::Status::INACTIVATED)
+//    }
 
 //    /// Click hover skin
 //    // Clear old

@@ -22,6 +22,9 @@ public:
     void changeSkin (GameData::Skin skin);
     void changeSkin (int no_skin);
 
+    void setLeftCorner (int x, int y);
+    Rectangle* lowerRectangle (int how_many) { my_rectangle.y+= (float)how_many; }
+
     [[nodiscard]] Status getStatus () const { return my_status; }
     void setStatus (Status new_status) { my_status= new_status; }
 
