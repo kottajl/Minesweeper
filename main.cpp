@@ -5,7 +5,7 @@
 #include "gameEngine.h"
 #include "rectButton.h"
 #include "switchButton.h"
-#include <unistd.h>
+//#include <unistd.h>
 
 using namespace std;
 
@@ -25,7 +25,7 @@ int main() {
     button1.addText("EASY", RAYWHITE);
 
     RectButton button2= {310, 475, 180, 50, BLACK};
-    button2.addText("MEDIUM", RAYWHITE);
+    button2.addText("NORMAL", RAYWHITE);
 
     RectButton button3= {310, 575, 180, 50, BLACK};
     button3.addText("HARD", RAYWHITE);
