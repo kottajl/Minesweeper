@@ -15,7 +15,7 @@ W menu głównym gry możliwe są do wyboru trzy poziomy trudności:
 
 W lewym dolnym rogu aplikacji znajdować się będzie również przycisk ***Sound fx***, za pomocą którego można wyłączyć efekty dźwiękowe w grze.  
 
-Po wyborze poziomu wyświetli się plansza o odpowiednich wymiarach. Z widoku planszy można zrestartować rozgrywkę (używając przycisku ***Restart***), a także powrócić do menu głównego (przycisk ***Main manu***).
+Po wyborze poziomu wyświetli się plansza o odpowiednich wymiarach. Z widoku planszy można zrestartować rozgrywkę (używając przycisku ***Restart***), a także powrócić do menu głównego (przycisk ***Main menu***).
 
 Samo sterowanie w trakcie rozgrywki nie różni się szczególnie od tego w innych, bardziej znanych odsłonach tej gry, a więc:
 
